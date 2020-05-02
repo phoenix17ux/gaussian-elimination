@@ -1,6 +1,5 @@
+import os, sys
 import tkinter as tk
-import os
-import sys
 
 class GaussApp(tk.Frame):
     def __init__(self, parent):
@@ -9,12 +8,14 @@ class GaussApp(tk.Frame):
         self.dict_var = {}
         self.text = ''
         self.matrix = []
+        
         self.butRead = tk.Button(self, text='Прочитать файл', command=self.readFile)
         self.butRead.grid(row=0 , column=2, sticky=tk.E)
-        self.x = tk.Entry(self, width=10, font='Arial 16')
-        self.x.grid(row=0, column=0, sticky=tk.E)
-        self.xB = tk.Button(self, text='Ввести ранг', command=self.choiceRank)
-        self.xB.grid(row=0, column=1, sticky=tk.E)
+        self.insertRank = tk.Entry(self, width=10, font='Arial 16')
+        self.insertRank.grid(row=0, column=0, sticky=tk.E)
+        self.butRank = tk.Button(self, text='Ввести ранг', command=self.choiceRank)
+        self.butRank.grid(row=0, column=1, sticky=tk.E)
+
 
     def createMatrix(self):    
         for row in range(self.rank):
@@ -97,6 +98,7 @@ class GaussApp(tk.Frame):
                 for k in range(len(a)):
                     line.append(a[k] - (b[k] * m))
                 self.matrix[j] = line
+        self.solve()
         self.insertMatrix()
 
 
@@ -123,14 +125,15 @@ class GaussApp(tk.Frame):
                 for s in range(len(a)):
                     line.append(round((a[s] - b[s] * m),1))
                 self.matrix[j] = line
+        self.solve()
         self.insertMatrix()
 
 
     def choiceRank(self):
-        self.rank = int(self.x.get())
+        self.rank = int(self.insertRank.get())
         self.butRead.destroy()
-        self.x.destroy()
-        self.xB.destroy()
+        self.insertRank.destroy()
+        self.butRank.destroy()
 
         self.panel()
         self.createMatrix()
@@ -163,7 +166,6 @@ class GaussApp(tk.Frame):
 
 
 if __name__ == "__main__":
-
     app = tk.Tk()
     app.title("Метод Гаусса")
     GaussApp(app).pack()
