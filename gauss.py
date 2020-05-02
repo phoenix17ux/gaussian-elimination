@@ -18,11 +18,11 @@ class GaussApp(tk.Frame):
 
 
     def createMatrix(self):    
-        for row in range(self.rank):
-            for column in range(self.rank + 1):
-                index = (row, column)
+        for i in range(self.rank):
+            for j in range(self.rank + 1):
+                index = i, j
                 pole = tk.Entry(self, width=10, font='Arial 16')
-                pole.grid(row=row, column=column, sticky=tk.W)
+                pole.grid(row=i, column=j, sticky=tk.W)
                 self.dict_var[index] = pole
 
         
@@ -35,7 +35,7 @@ class GaussApp(tk.Frame):
 
 
     def insertText(self):
-        self.text+="\n" + "Ответ " + self.answer() + "\n"
+        self.text+="\n" + "Ответ: " + self.answer() + "\n"
         self.text_tk.insert(1.0,self.text)
 
 
@@ -72,8 +72,10 @@ class GaussApp(tk.Frame):
 
         butTwo = tk.Button(self, text='Обратный ход', command=self.method2)
         butTwo.grid(row=self.rank+1 , column=1, sticky=tk.W)
+        
         self.text_tk = tk.Text(width=50, height=10)
         self.text_tk.pack()
+        
         frame = tk.Frame()
         frame.pack()
         b_insert = tk.Button(self, text="Решение", command=self.insertText)
@@ -87,17 +89,17 @@ class GaussApp(tk.Frame):
             self.solve()
             
             for j in range(i + 1, self.rank):
-                
                 b = self.matrix[j]
                 try:
                     m = a[i] / b[i]
                 except:
                     pass
-                line = []
+                row_list = []
                 
                 for k in range(len(a)):
-                    line.append(a[k] - (b[k] * m))
-                self.matrix[j] = line
+                    row_list.append(a[k] - (b[k] * m))
+                self.matrix[j] = row_list
+        
         self.solve()
         self.insertMatrix()
 
@@ -106,13 +108,14 @@ class GaussApp(tk.Frame):
         self.getMatrix()
         for i in range(self.rank - 1, -1, -1):
             self.solve()
-            line = []
+            row_list = []
+
             for j in range(self.rank + 1):
                 try:
-                    line.append(self.matrix[i][j] / self.matrix[i][i])
+                    row_list.append(self.matrix[i][j] / self.matrix[i][i])
                 except:
                     pass
-            self.matrix[i] = line
+            self.matrix[i] = row_list
             a = self.matrix[i]
 
             for j in range(i - 1, -1, -1):
@@ -121,10 +124,11 @@ class GaussApp(tk.Frame):
                     m = a[i] / b[i]
                 except:
                     pass
-                line = []
+                row_list = []
+
                 for s in range(len(a)):
-                    line.append(round((a[s] - b[s] * m),1))
-                self.matrix[j] = line
+                    row_list.append(round((a[s] - b[s] * m),1))
+                self.matrix[j] = row_list
         self.solve()
         self.insertMatrix()
 
@@ -140,32 +144,29 @@ class GaussApp(tk.Frame):
 
 
     def readFile(self):
-        self.rank = 0
-        
         if sys.platform[:3] == "win":
             file = open(os.getcwd() + "\\file.txt", 'r')
         else:
             file = open(os.getcwd() + "/file.txt", 'r')
-        line = []
+        file_list = []
         for i in file.read():
             if i.isdigit():
-                line.append(int(i)) 
+                file_list.append(int(i)) 
             else:
                 self.rank +=1   
-        
-        self.matrix = []
 
         for i in range(self.rank):
             self.matrix.append([])
             for j in range(self.rank + 1):
-                self.matrix[i].append(line[j])
-            line = line[self.rank+1:]
+                self.matrix[i].append(file_list[j])
+            file_list = file_list[self.rank+1:]
         self.createMatrix()
         self.insertMatrix()
         self.panel()
 
 
 if __name__ == "__main__":
+
     app = tk.Tk()
     app.title("Метод Гаусса")
     GaussApp(app).pack()
