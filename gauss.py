@@ -1,7 +1,7 @@
 import os, sys
 import tkinter as tk
 
-class Math:
+class Matrix:
 
     def __init__(self):
         self.matrix = []
@@ -53,7 +53,7 @@ class GaussApp(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.dict_var = {}
         self.text = ''
-        self.matrix = Math()
+        self.matrix = Matrix()
         
         self.butRead = tk.Button(self, text='Прочитать файл', command=self.readFile)
         self.butRead.grid(row=0 , column=2, sticky=tk.E)
